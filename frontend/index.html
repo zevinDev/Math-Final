@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MCQ Practice</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<link rel="stylesheet" type="text/css" href="styles.css">
+<style>
+#gameScreen {
+  display: none;
+}
+</style>
+</head>
+<body>
+  <section class="vh-100">
+    <div class="container h-100">
+
+      <div id="initialScreen" class="h-100">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+            <h1>AP MCQ Practice Game</h1>
+            <div class="form-group">
+              <input type="text" placeholder="Enter Nickname" id="nickNameInput"/>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-success"
+              id="newGameButton"
+            >
+              Create New Game
+            </button>
+            <div>OR</div>
+            <div class="form-group">
+              <input type="text" placeholder="Enter Game Code" id="gameCodeInput"/>
+            </div>
+            <button
+              type="submit"
+              class="btn btn-success"
+              id="joinGameButton"
+            >
+              Join Game
+            </button>
+        </div>
+      </div>
+
+      <div id="gameScreen" class="h-100">
+        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+          <div id="playerList"></div>
+          <h1>Your game code is: <span id="gameCodeDisplay"></span></h1>
+          <canvas id="canvas"></canvas>
+          <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+          </div>
+                    <!-- Add this section for the quiz -->
+                    <div id="quizSection">
+                      <h2 id="question"></h2>
+                      <ul id="options"></ul>
+                      <button id="submitA">A</button><button id="submitB">B</button><button id="submitC">C</button><button id="submitD">D</button>
+                    </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
