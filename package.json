@@ -4,7 +4,7 @@
   "description": "node ./server/server.js",
   "main": "./server/server.js",
   "scripts": {
-  "start": "node ./server/server.js"
+  "start": "(cd ./server && npm install && node server.js)"
 },
   "repository": {
   "type": "git",
