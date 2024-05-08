@@ -1,7 +1,7 @@
 const cors = require('cors');
 const io = require('socket.io')(process.env.PORT || 3000, {
   cors: {
-    origin: "https://zevindev.github.io",
+    origin: "https://d3fd94a85cc9.ngrok.app",
     methods: ["GET", "POST"],
     credentials: true
   }

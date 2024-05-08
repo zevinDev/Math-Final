@@ -1,7 +1,7 @@
 const BG_COLOUR = '#231f20';
 const CAR_COLOUR = '#c2c2c2';
 
-const socket = io('https://4fb7-2607-fb91-8e10-9540-b9fc-c3c4-4f1c-179e.ngrok-free.app', {
+const socket = io('https://d3fd94a85cc9.ngrok.app', {
   withCredentials: true,
 });
 
