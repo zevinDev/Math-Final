@@ -1,7 +1,16 @@
-const io = require('socket.io')();
-
+const cors = require('cors');
+const io = require('socket.io')(process.env.PORT || 3000, {
+  cors: {
+    origin: "https://zevindev.github.io",
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 let clientRooms = {};
 let state = {};
+
+
+
 
 io.on('connection', (client) => {
   client.on('newGame', handleNewGame);
@@ -92,5 +101,3 @@ function makeid(length) {
   }
   return result;
 }
-console.log('Server started');
-io.listen(process.env.PORT || 3000);
