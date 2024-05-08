@@ -1,7 +1,7 @@
 const io = require("socket.io")(process.env.PORT || 3000, {
   cors: {
     origin:
-      "https://run-math-final-0990160b5a86.herokuapp.com:3000/",
+      "https://run-math-final-0990160b5a86.herokuapp.com:8080/",
     methods: ["GET", "POST"],
     credentials: true,
   },
