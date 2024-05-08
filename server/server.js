@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, "public", "../../frontend/index.html"));
 });
-app.listen(80, () => {
+app.listen(8080, () => {
   console.log("Server successfully running on port 8080");
 });
 
