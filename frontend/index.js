@@ -1,7 +1,7 @@
 const BG_COLOUR = '#231f20';
 const CAR_COLOUR = '#c2c2c2';
 
-const socket = io('127.0.0.1:3000');
+const socket = io('https://6c7d-2607-fb91-8e10-9540-b9fc-c3c4-4f1c-179e.ngrok-free.app');
 
 socket.on('gameCode', handleGameCode);
 
