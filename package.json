@@ -1,0 +1,19 @@
+{
+  "name": "coolnodeapp",
+  "version": "1.0.0",
+  "description": "node ./server/server.js",
+  "main": "./server/server.js",
+  "scripts": {
+  "start": "node ./server/server.js"
+},
+  "repository": {
+  "type": "git",
+  "url": ""
+},
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+  "url": ""
+},
+  "homepage": ""
+}
