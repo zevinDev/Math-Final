@@ -89,6 +89,13 @@ function draw() {
     ctx.fillStyle = 'black';
     ctx.font = '20px Arial';
 
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(800, 0);
+    ctx.lineTo(800, canvas.height);
+    ctx.stroke();
+
     // Draw the nickname under the car
     ctx.fillText(car.nickname, car.x, car.y + 30);
   });
@@ -176,19 +183,16 @@ function resetProgressBar() {
   progressBar.style.width = '100%';
 }
 
-socket.on('moveCar', () => {
-  for(let i = 0; i < cars.length; i++) {
-    if (cars[i].nickname == nickNameInput.value) {
-      cars[i].x += 50;
-    }
-  }
-});
 
 socket.on('carMoved', (nickName) => {
   for(let i = 0; i < cars.length; i++) {
     // Check if the car's clientId matches the one received
     if (cars[i].nickname == nickName) {
-      cars[i].x += 50;
+      cars[i].x += 200;
+      if(cars[i].x >= 800){
+        alert(`${nickName} has won the game!`);
+        location.reload();
+      }
     }
   }
 });

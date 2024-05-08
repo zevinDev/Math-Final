@@ -9,9 +9,6 @@ const io = require('socket.io')(process.env.PORT || 3000, {
 let clientRooms = {};
 let state = {};
 
-
-
-
 io.on('connection', (client) => {
   client.on('newGame', handleNewGame);
   client.on('joinGame', handleJoinGame);
@@ -25,12 +22,12 @@ io.on('connection', (client) => {
         { nickName: nickName, points: 0, id: client.id},
       ],
     };
+    client.join(roomName); // client joins the room
     client.emit('gameCode', roomName);
-    io.emit('playerJoined', nickName);
+    io.to(roomName).emit('playerJoined', nickName); // emit to all clients in the room
   }
 
   function handleJoinGame(roomName, nickName) {
-
     let numClients = state[roomName].players.length;
 
     if (numClients === 0) {
@@ -42,12 +39,14 @@ io.on('connection', (client) => {
     }
 
     clientRooms[client.id] = roomName;
+    client.join(roomName); // client joins the room
     state[roomName].players.push({ nickName: nickName, points: 0, id: client.id});
     client.emit('gameCode', roomName);
-    io.emit('playerJoined', state[roomName].players.map(player => player.nickName)); // Send the list of all player nicknames
+    io.to(roomName).emit('playerJoined', state[roomName].players.map(player => player.nickName)); // emit to all clients in the room
   }
 
   function startQuiz(client){
+    let roomName = clientRooms[client.id];
     let questions = require('./questions.json');
     let timerId;
     let currentQuestion = getRandomQuestion(questions);
@@ -59,7 +58,7 @@ io.on('connection', (client) => {
         }
   
         currentQuestion = getRandomQuestion(questions);
-        io.emit('question', { 
+        io.to(roomName).emit('question', { 
           text: currentQuestion.text, 
           options: currentQuestion.options 
         });
@@ -74,15 +73,13 @@ io.on('connection', (client) => {
       if (answer === currentQuestion.answer) {
         sendQuestion().then(() => {
           // Call the function to move the car
-          client.emit('moveCar')
-          client.broadcast.emit('carMoved', state[clientRooms[client.id]].players.find(player => player.id === client.id).nickName);
+          io.to(roomName).emit('carMoved', state[roomName].players.find(player => player.id === client.id).nickName);
         });
-      }
-      else {
+      } else {
         client.emit('incorrectAnswer');
       }
     });
-    
+  
     sendQuestion();
   }
   
