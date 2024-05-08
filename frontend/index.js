@@ -1,38 +1,46 @@
-const BG_COLOUR = '#231f20';
-const CAR_COLOUR = '#c2c2c2';
+const BG_COLOUR = "#231f20";
+const CAR_COLOUR = "#c2c2c2";
 
-const socket = io('https://d3fd94a85cc9.ngrok.app', {
-  withCredentials: true,
-});
+const socket = io(
+  "https://run-math-final-0990160b5a86.herokuapp.com:3000/",
+  {
+    withCredentials: true,
+  },
+);
 
-socket.on('gameCode', handleGameCode);
+socket.on("gameCode", handleGameCode);
 
-const gameScreen = document.getElementById('gameScreen');
-const initialScreen = document.getElementById('initialScreen');
-const newGameBtn = document.getElementById('newGameButton');
-const joinGameBtn = document.getElementById('joinGameButton');
-const gameCodeInput = document.getElementById('gameCodeInput');
-const nickNameInput = document.getElementById('nickNameInput');
-const gameCodeDisplay = document.getElementById('gameCodeDisplay');
+const gameScreen = document.getElementById("gameScreen");
+const initialScreen = document.getElementById("initialScreen");
+const newGameBtn = document.getElementById("newGameButton");
+const joinGameBtn = document.getElementById("joinGameButton");
+const gameCodeInput = document.getElementById("gameCodeInput");
+const nickNameInput = document.getElementById("nickNameInput");
+const gameCodeDisplay = document.getElementById("gameCodeDisplay");
 
-newGameBtn.addEventListener('click', newGame);
-joinGameBtn.addEventListener('click', joinGame);
+newGameBtn.addEventListener("click", newGame);
+joinGameBtn.addEventListener("click", joinGame);
 
 let canvas, ctx;
 let playerNumber;
 let gameActive = false;
-let cars = [{x: 0, y: 100, nickname: "waiting..."}, {x: 0, y: 200, nickname: "waiting..."}, {x: 0, y: 300, nickname: "waiting..."}, {x: 0, y: 400, nickname: "waiting..."}]; // 4 cars
+let cars = [
+  { x: 0, y: 100, nickname: "waiting..." },
+  { x: 0, y: 200, nickname: "waiting..." },
+  { x: 0, y: 300, nickname: "waiting..." },
+  { x: 0, y: 400, nickname: "waiting..." },
+]; // 4 cars
 let playersReady = 0; // Track the number of players that have joined
 
 function newGame() {
-  socket.emit('newGame', nickNameInput.value);
+  socket.emit("newGame", nickNameInput.value);
   preGame();
 }
 
 function joinGame() {
   const code = gameCodeInput.value;
   const nickName = nickNameInput.value;
-  socket.emit('joinGame', code, nickName);
+  socket.emit("joinGame", code, nickName);
   preGame();
 }
 
@@ -44,19 +52,19 @@ function preGame() {
   gameCodeDisplay.innerText = `Game Code: ${gameCodeInput.value}`;
 
   // Wait for all players to join before initializing the game
-  socket.on('playerJoined', (nicknames) => {
+  socket.on("playerJoined", (nicknames) => {
     playersReady = nicknames.length;
     playerNicknames = nicknames; // Update the list of player nicknames
     updatePlayerList(); // Update the displayed list of players
     if (playersReady >= 4) {
-      socket.emit('startQuiz');
+      socket.emit("startQuiz");
       init();
     }
   });
 }
 
 function updatePlayerList() {
-  for(let i = 0; i< playersReady; i++) {
+  for (let i = 0; i < playersReady; i++) {
     cars[i].nickname = playerNicknames[i];
   }
 }
@@ -66,8 +74,8 @@ function handleGameCode(gameCode) {
 }
 
 function init() {
-  canvas = document.getElementById('canvas');
-  ctx = canvas.getContext('2d');
+  canvas = document.getElementById("canvas");
+  ctx = canvas.getContext("2d");
 
   canvas.width = 800; // wider canvas for cars to move
   canvas.height = 600;
@@ -75,21 +83,20 @@ function init() {
   gameActive = true;
 }
 
-
 function draw() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw the cars and the nicknames
-  cars.forEach(car => {
+  cars.forEach((car) => {
     ctx.fillStyle = CAR_COLOUR;
     ctx.fillRect(car.x, car.y, 50, 20); // Draw a simple rectangle as a car
 
     // Set the color and font for the nicknames
-    ctx.fillStyle = 'black';
-    ctx.font = '20px Arial';
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
 
-    ctx.strokeStyle = 'red';
+    ctx.strokeStyle = "red";
     ctx.lineWidth = 5;
     ctx.beginPath();
     ctx.moveTo(800, 0);
@@ -101,39 +108,39 @@ function draw() {
   });
 }
 
-let submitA = document.getElementById('submitA');
-let submitB = document.getElementById('submitB');
-let submitC = document.getElementById('submitC');
-let submitD = document.getElementById('submitD');
-submitA.addEventListener('click', () => {
-  socket.emit('answer', 'A');
+let submitA = document.getElementById("submitA");
+let submitB = document.getElementById("submitB");
+let submitC = document.getElementById("submitC");
+let submitD = document.getElementById("submitD");
+submitA.addEventListener("click", () => {
+  socket.emit("answer", "A");
 });
-submitB.addEventListener('click', () => {
-  socket.emit('answer', 'B');
+submitB.addEventListener("click", () => {
+  socket.emit("answer", "B");
 });
-submitC.addEventListener('click', () => {
-  socket.emit('answer', 'C');
+submitC.addEventListener("click", () => {
+  socket.emit("answer", "C");
 });
-submitD.addEventListener('click', () => {
-  socket.emit('answer', 'D');
+submitD.addEventListener("click", () => {
+  socket.emit("answer", "D");
 });
 
-let questionElement = document.getElementById('question');
-let optionsElement = document.getElementById('options');
+let questionElement = document.getElementById("question");
+let optionsElement = document.getElementById("options");
 
-socket.on('question', (question) => {
-  document.getElementById('quizSection').style.display = 'block';
+socket.on("question", (question) => {
+  document.getElementById("quizSection").style.display = "block";
   displayQuestion(question);
 });
 
-socket.on('incorrectAnswer', () => {
-  document.getElementById('quizSection').style.display = 'none';
+socket.on("incorrectAnswer", () => {
+  document.getElementById("quizSection").style.display = "none";
 });
 
 let timerId;
 
 function displayQuestion(question) {
-// Clear any existing timer
+  // Clear any existing timer
   if (timerId) {
     clearTimeout(timerId);
     resetProgressBar();
@@ -144,11 +151,11 @@ function displayQuestion(question) {
   MathJax.typeset();
 
   // Clear the previous options
-  optionsElement.innerHTML = '';
+  optionsElement.innerHTML = "";
 
   // Add each option to the options element
   for (let option in question.options) {
-    let optionElement = document.createElement('li');
+    let optionElement = document.createElement("li");
     optionElement.innerText = `${option}: ${question.options[option]}`;
     MathJax.typeset();
     optionsElement.appendChild(optionElement);
@@ -161,42 +168,40 @@ function displayQuestion(question) {
   // Start a new timer
   timerId = setTimeout(() => {
     // This code will run after 140 seconds
-    console.log('Time is up!');
+    console.log("Time is up!");
     // You can add code here to handle the end of the timer, such as moving to the next question
   }, 140 * 1000); // 140 seconds
 }
 
 function startProgressBar() {
-  let progressBar = document.getElementById('progress-bar');
+  let progressBar = document.getElementById("progress-bar");
   // Enable the transition
-  progressBar.style.transition = 'width 140s linear';
+  progressBar.style.transition = "width 140s linear";
   // Delay the width change by 10ms
   setTimeout(() => {
-    progressBar.style.width = '0%';
+    progressBar.style.width = "0%";
   }, 10);
 }
 
 function resetProgressBar() {
-  let progressBar = document.getElementById('progress-bar');
+  let progressBar = document.getElementById("progress-bar");
   // Disable the transition
-  progressBar.style.transition = 'none';
-  progressBar.style.width = '100%';
+  progressBar.style.transition = "none";
+  progressBar.style.width = "100%";
 }
 
-
-socket.on('carMoved', (nickName) => {
-  for(let i = 0; i < cars.length; i++) {
+socket.on("carMoved", (nickName) => {
+  for (let i = 0; i < cars.length; i++) {
     // Check if the car's clientId matches the one received
     if (cars[i].nickname == nickName) {
       cars[i].x += 200;
-      if(cars[i].x >= 800){
+      if (cars[i].x >= 800) {
         alert(`${nickName} has won the game!`);
         location.reload();
       }
     }
   }
 });
-
 
 // Call draw in a loop to animate the cars
 function gameLoop() {
