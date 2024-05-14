@@ -1,4 +1,4 @@
-const io = require("socket.io")(process.env.PORT || 3000, {
+const io = require("socket.io")(3000, {
   cors: {
     origin:
       "https://run-math-final-0990160b5a86.herokuapp.com:8080/",
@@ -11,12 +11,13 @@ let state = {};
 const express = require("express");
 const path = require("path");
 const app = express();
+const PORT = process.env.PORT || 8080;
 app.use(express.static(path.join(__dirname, "public")));
 app.get("/", async (req, res) => {
   res.sendFile(path.join(__dirname, '/public', "index.html"));
 });
-app.listen(8080, () => {
-  console.log("Server successfully running on port 8080");
+app.listen(PORT, () => {
+  console.log(`Server successfully running on port ${PORT}`);
 });
 
 io.on("connection", (client) => {
