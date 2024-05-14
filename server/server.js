@@ -1,25 +1,19 @@
-const io = require("socket.io")(3000, {
+const express = require("express");
+const path = require("path");
+const app = express();
+app.use(express.static(path.join(__dirname, "public")));
+const server = require('http').createServer(app);
+const io = require("socket.io")(server, {
   cors: {
-    origin:
-      "https://run-math-final-0990160b5a86.herokuapp.com:8080/",
+    origin: "https://run-math-final-0990160b5a86.herokuapp.com:8080/",
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
+
+
 let clientRooms = {};
 let state = {};
-const express = require("express");
-const path = require("path");
-const app = express();
-const PORT = process.env.PORT || 8080;
-app.use(express.static(path.join(__dirname, "public")));
-app.get("/", async (req, res) => {
-  res.sendFile(path.join(__dirname, '/public', "index.html"));
-});
-app.listen(PORT, () => {
-  console.log(`Server successfully running on port ${PORT}`);
-});
-
 io.on("connection", (client) => {
   client.on("newGame", handleNewGame);
   client.on("joinGame", handleJoinGame);
@@ -146,3 +140,8 @@ function makeid(length) {
   }
   return result;
 }
+
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+  console.log(`Server successfully running on port ${PORT}`);
+});

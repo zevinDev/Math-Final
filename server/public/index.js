@@ -2,7 +2,7 @@ const BG_COLOUR = "#231f20";
 const CAR_COLOUR = "#c2c2c2";
 
 const socket = io(
-  "https://run-math-final-0990160b5a86.herokuapp.com:3000/",
+  location.hostname === "localhost" ? "http://localhost:8080" : "https://run-math-final-0990160b5a86.herokuapp.com/",
   {
     withCredentials: true,
   },
