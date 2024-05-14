@@ -55,10 +55,17 @@ function preGame() {
   socket.on("playerJoined", (nicknames) => {
     playersReady = nicknames.length;
     playerNicknames = nicknames; // Update the list of player nicknames
+    console.log(nicknames);
     updatePlayerList(); // Update the displayed list of players
+  
+    // Initialize the game for each player as they join
+    if (!gameActive) {
+      init();
+    }
+  
+    // Start the quiz when all players have joined
     if (playersReady >= 4) {
       socket.emit("startQuiz");
-      init();
     }
   });
 }
@@ -128,13 +135,35 @@ submitD.addEventListener("click", () => {
 let questionElement = document.getElementById("question");
 let optionsElement = document.getElementById("options");
 
+
 socket.on("question", (question) => {
   document.getElementById("quizSection").style.display = "block";
+  submitA.style.display = "inline-block";
+  submitB.style.display = "inline-block";
+  submitC.style.display = "inline-block";
+  submitD.style.display = "inline-block";
   displayQuestion(question);
 });
 
 socket.on("incorrectAnswer", () => {
-  document.getElementById("quizSection").style.display = "none";
+  // Get the quiz section element
+  let quizSection = document.getElementById("quizSection");
+
+  // Create a new paragraph element for the incorrect message
+  let incorrectMessage = document.createElement("p");
+  incorrectMessage.id = "incorrectMessage"; // Add an id to the incorrect message
+  incorrectMessage.innerText = "Incorrect";
+
+  // Append the incorrect message to the quiz section
+  quizSection.appendChild(incorrectMessage);
+
+  // Hide the question and options
+  questionElement.style.display = "none";
+  optionsElement.style.display = "none";
+  submitA.style.display = "none";
+  submitB.style.display = "none";
+  submitC.style.display = "none";
+  submitD.style.display = "none";
 });
 
 let timerId;
@@ -145,6 +174,16 @@ function displayQuestion(question) {
     clearTimeout(timerId);
     resetProgressBar();
   }
+
+  // Remove the incorrect message if it exists
+  let incorrectMessage = document.getElementById("incorrectMessage");
+  if (incorrectMessage) {
+    incorrectMessage.remove();
+  }
+
+  // Show the question and options
+  questionElement.style.display = "block";
+  optionsElement.style.display = "block";
 
   // Update the question text
   questionElement.innerText = question.text;
